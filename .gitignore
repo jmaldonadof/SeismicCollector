@@ -1,0 +1,18 @@
+# Ignore folders with data
+tweets/*
+log/*
+
+# Ignore enviroment
+env/*
+
+# Eclipse specific git ignore
+.project
+*.pydevproject
+.settings/
+
+# Ignore byte code files
+*.pyc
+
+# Ignore backup files
+*~
+
