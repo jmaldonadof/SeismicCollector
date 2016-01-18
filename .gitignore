@@ -3,7 +3,7 @@ tweets/*
 log/*
 
 # Ignore enviroment
-env/*
+venv/*
 
 # Eclipse specific git ignore
 .project
@@ -16,3 +16,5 @@ env/*
 # Ignore backup files
 *~
 
+# Ignore credentials file
+credentials.py
