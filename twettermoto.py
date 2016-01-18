@@ -7,6 +7,12 @@ import credentials
 import pika
 import time
 
+# Set logging service
+import logging
+log_filename = 'log/twettermoto.log'
+log_format_style = '%(asctime)s - %(name)s - %(levelname)s - %(message)s'
+logging.basicConfig(filename=log_filename, format=log_format_style, level=logging.INFO)
+
 # Set encoding to utf8
 import sys
 reload(sys)
@@ -40,6 +46,8 @@ class CustomStreamListener(tweepy.StreamListener):
 		super(tweepy.StreamListener, self).__init__()
 		
 		if enqueue:
+			logging.info('Queuing option is set to true')
+			
 			# Setup rabbitMQ Connection
 			connection = pika.BlockingConnection(
 				pika.ConnectionParameters(host='localhost')
@@ -91,7 +99,7 @@ class CustomStreamListener(tweepy.StreamListener):
 			info['retweeted_status']['user']['profile_image_url'] = status.retweeted_status.user.profile_image_url
 		
 		# Print tweet in screen
-		print str(status.id) + ' - ' + status.text
+		# print str(status.id) + ' - ' + status.text
 			
 		if enqueue:	
 			# Enqueue the tweet
@@ -101,12 +109,12 @@ class CustomStreamListener(tweepy.StreamListener):
 			
 		# Save tweet into the database
 		if not tweets_db.save_tweet(info):
-			print 'Error, tweet was not saved'			
+			logging.error('tweet was not saved')		
 
 		return True
 	
 	def on_error(self, status):
-		print status
+		logging.error(status)
 
 
 # Authentication
@@ -120,5 +128,5 @@ while True:
 	try:
 		stream.filter(track=keywords)
 	except Exception, e:
-		print e
+		logging.error(e)
 		continue
