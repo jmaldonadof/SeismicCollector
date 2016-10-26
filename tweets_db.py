@@ -9,6 +9,7 @@ from peewee import Model, MySQLDatabase,\
 					FloatField as Float
 import credentials
 import datetime
+import time
 
 #Credentials to connect with database
 db = MySQLDatabase(credentials.db_name, user=credentials.db_user, passwd=credentials.db_pass, charset='utf8')
@@ -101,11 +102,6 @@ def tryDisconnect():
 	except Exception as e:
 		print 'Error!' + str(e)
 
-
-def _get_datetime(date):
-	"""returns the datetime object from the timestamp"""
-	format_date = datetime.datetime.fromtimestamp(date)
-	return format_date
 		
 def save_user(user):
 	#Search if the user exist in database
@@ -158,7 +154,7 @@ def save_tweet(tweet):
 		is_retweet = True if 'retweeted_status' in tweet else False
 		retweet_of = tweet['retweeted_status']['id'] if is_retweet else None
 		lang = tweet['lang']
-		created_at = _get_datetime(tweet['created_at'])
+		created_at = datetime.datetime.utcfromtimestamp(tweet['created_at']) #Receive a timestamp
 		keywords = tweet['keywords']		
 		
 		t = Tweet(tweet_id=tweet_id,

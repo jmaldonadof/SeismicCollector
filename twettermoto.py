@@ -6,6 +6,7 @@ import json
 import credentials
 import pika
 import time
+import calendar
 
 # Set logging service
 import logging
@@ -26,7 +27,7 @@ requests.packages.urllib3.disable_warnings()
 enqueue = True
 
 # List of keywords to collect
-keywords = ['temblor','terremoto','earthquake','quake','gempa','lindol','scossa','deprem']
+keywords = ['temblor','terremoto', 'earthquake']
 
 
 def extract_keywords(text):
@@ -70,7 +71,7 @@ class CustomStreamListener(tweepy.StreamListener):
 		info['favorite_count'] = status.favorite_count
 		info['in_reply_to_status_id'] = status.in_reply_to_status_id
 		info['lang'] = status.lang
-		info['created_at'] = time.mktime(status.created_at.timetuple())
+		info['created_at'] = calendar.timegm(status.created_at.timetuple()) #Send a timestamp 
 		info['keywords'] = str(extract_keywords(status.text))
 		info['user'] = {}
 		info['user']['id'] = status.user.id
